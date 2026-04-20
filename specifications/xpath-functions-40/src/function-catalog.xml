@@ -249,7 +249,7 @@
       </fos:field>-->
    </fos:record-type>
    
-   <fos:record-type id="compiled-regex-record" extensible="false">
+   <!--<fos:record-type id="compiled-regex-record" extensible="false">
       <fos:summary>
          <p>This record type represents the results of processing a regular expression,
             together with a set of flags, It contains function items that can be used
@@ -311,11 +311,12 @@
             </p>
          </fos:meaning>
       </fos:field>
-   </fos:record-type>
+   </fos:record-type>-->
    
    <fos:record-type id="matching-segment-record" extensible="false">
       <fos:summary>
-         <p>This record type represents the a segment of an input string that matched a regular expression,
+         <p>This record type represents the a <termref def="dt-segment"/> of an input string 
+            that matched a regular expression,
             together with any captured groups found during the matching process.</p>
       </fos:summary>
       <fos:field name="substring" type="xs:string" required="true">
@@ -8137,6 +8138,7 @@ Tak, tak, tak! - da kommen sie.
          </fos:example>
       </fos:examples>
       <fos:see-also prefix="fn" name="analyze-string"/>
+      <fos:see-also prefix="fn" name="matching-segments"/>
       <fos:see-also prefix="fn" name="substring-before"/>
       <fos:see-also prefix="fn" name="substring-after"/>
       <fos:changes>
@@ -8149,7 +8151,91 @@ Tak, tak, tak! - da kommen sie.
       </fos:changes>
    </fos:function>
    
-   <fos:function name="regex" prefix="fn">
+   <fos:function name="matching-segments" prefix="fn">
+      <fos:signatures>
+         <fos:proto name="matching-segments" return-type="fn:matching-segment-record*">
+            <fos:arg name="value" type="xs:string?"/>
+            <fos:arg name="pattern" type="xs:string"/>
+            <fos:arg name="flags" type="xs:string?" default='""' note="default-on-empty"/>
+         </fos:proto>
+      </fos:signatures>
+      <fos:properties>
+         <fos:property>deterministic</fos:property>
+         <fos:property>context-independent</fos:property>
+         <fos:property>focus-independent</fos:property>
+      </fos:properties>
+      <fos:summary>
+         <p>Applies a regular expression (with flags) to an input string, returning details
+         of all the matches that were found.</p>
+      </fos:summary>
+      <fos:rules>
+         
+         <p>If <code>$value</code> is the empty sequence then the function returns the empty sequence.</p>
+         
+         <p>The value of <code>$regex</code> must be a regular expression as defined
+         in <specref ref="regex-syntax"/>.</p>
+         
+         <p>The value of <code>$flags</code> (if supplied) must be a string representing
+         a set of flags as defined in <specref ref="flags"/>.</p>
+         
+         <p>The function returns a sequence of records of type <loc href="#matching-segment-record">matching-segment-record</loc>,
+         one for each of the <termref def="dt-disjoint-matching-segments"/> of <code>$value</code> that matches the regular expression.</p>
+         
+         <p>The way in which the disjoint matching segments are identified is described in <specref ref="id-regex-processing-model"/>.</p>
+         
+         <p>The sequence of matching segments in the result will be sorted in order of ascending 
+            position within the input string.</p>
+      </fos:rules>
+      <fos:errors>
+         <p>A dynamic error is raised <errorref class="RX" code="0002"
+               /> if the value of
+               <code>$pattern</code> is invalid according to the rules described in section <specref
+               ref="regex-syntax"/>.</p>
+         <p>A dynamic error is raised <errorref class="RX" code="0001"
+               /> if the value of
+               <code>$flags</code> is invalid according to the rules described in section <specref
+               ref="flags"/>.</p>
+      </fos:errors>
+      <fos:notes>
+         <p>The information returned by this function is similar to that returned by <function>fn:analyze-string</function>.
+         But because it is returned as a map, it may be easier to process.</p>
+      </fos:notes>
+      <fos:examples>
+         <fos:example>
+            <fos:test>
+               <fos:expression><eg>matching-segments("A1,C15,,D24, X50,", "([A-Z])([0-9]+)")</eg></fos:expression>
+               <fos:result><eg>
+  { "substring": "A1",
+    "position": 1,
+    "groups": {1: { "group": "A", "position": 1 },
+               2: { "group": "1", "position": 2 }}
+  },
+  { "substring": "C15",
+    "position": 4,
+    "groups": {1: { "group": "C", "position": 4 },
+               2: { "group": "15", "position": 5 }}
+  },
+  { "substring": "D24",
+    "position": 9,
+    "groups": {1: { "group": "D", "position": 9 },
+               2: { "group": "24", "position": 10 }}
+  },
+  { "substring": "X50",
+    "position": 14,
+    "groups": {1: { "group": "X", "position": 14 },
+               2: { "group": "50", "position": 15 }}
+  }</eg>
+               </fos:result>
+            </fos:test>
+         </fos:example>
+      </fos:examples>
+      <fos:see-also prefix="fn" name="analyze-string"/>
+      <fos:changes>
+         <fos:change issue="1310" PR="2470" date="2026-04-20"><p>New in 4.0</p></fos:change>
+      </fos:changes>
+   </fos:function>
+   
+   <!--<fos:function name="regex" prefix="fn">
       <fos:signatures>
          <fos:proto name="regex" return-type="fn:compiled-regex-record">
             <fos:arg name="pattern" type="xs:string"/>
@@ -8226,7 +8312,7 @@ return tokenize("A group of 10 students")!$regex ? replace(., '$1', upper-case#1
             </fos:test>
          </fos:example>
       </fos:examples>
-   </fos:function>
+   </fos:function>-->
    
    <fos:function name="analyze-string" prefix="fn">
       <fos:signatures>
