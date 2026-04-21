@@ -315,7 +315,7 @@
    
    <fos:record-type id="matching-segment-record" extensible="false">
       <fos:summary>
-         <p>This record type represents the a <termref def="dt-segment"/> of an input string 
+         <p>This record type represents a <termref def="dt-segment"/> of an input string 
             that matched a regular expression,
             together with any captured groups found during the matching process.</p>
       </fos:summary>
@@ -8203,6 +8203,29 @@ Tak, tak, tak! - da kommen sie.
       <fos:examples>
          <fos:example>
             <fos:test>
+               <fos:expression><eg>matching-segments("The cat sat on the mat.", "\w+")</eg></fos:expression>
+               <fos:result><eg>
+  { "substring": "The", "position": 1, "groups": {}},
+  { "substring": "cat", "position": 5, "groups": {}},  
+  { "substring": "sat", "position": 9, "groups": {}},  
+  { "substring": "on",  "position": 13, "groups": {}},  
+  { "substring": "the", "position": 16, "groups": {}},  
+  { "substring": "mat", "position": 20, "groups": {}}  
+               </eg></fos:result>
+            </fos:test>
+            <fos:test>
+               <fos:expression><eg>matching-segments("08-12-03", "^(\d+)\-(\d+)\-(\d+)$")</eg></fos:expression>
+               <fos:result><eg>
+  { "substring": "08-12-03",
+    "position": 1,
+    "groups": { 1: {"group": "08", "position": 1},
+                2: {"group": "12", "position": 4},
+                3: {"group": "03", "position": 7}
+              }
+  }
+                </eg></fos:result>
+            </fos:test>
+            <fos:test>
                <fos:expression><eg>matching-segments("A1,C15,,D24, X50,", "([A-Z])([0-9]+)")</eg></fos:expression>
                <fos:result><eg>
   { "substring": "A1",
@@ -8226,6 +8249,34 @@ Tak, tak, tak! - da kommen sie.
                2: { "group": "50", "position": 15 }}
   }</eg>
                </fos:result>
+            </fos:test>
+            <fos:test>
+               <fos:expression><eg>matching-segments("Chapter 5", "(Chapter|Appendix)(?=\s+([0-9]+))")</eg></fos:expression>
+               <fos:result><eg>
+  { "substring": "Chapter",
+    "position": 1,
+    "groups": {1: { "group": "Chapter", "position": 1 },
+               2: { "group": "5", "position": 9 }
+              }
+  }                                               
+               </eg></fos:result>
+            </fos:test>
+            <fos:test>
+               <fos:expression><eg>matching-segments("There we go", "\b(?=(\w+))")</eg></fos:expression>
+               <fos:result><eg>
+  { "substring": "",
+    "position": 1,
+    "groups": {1: { "group": "There", "position": 1 } }
+  },
+  { "substring": "",
+    "position": 7,
+    "groups": {1: { "group": "we", "position": 7 } }
+  }
+  { "substring": "",
+    "position": 10,
+    "groups": {1: { "group": "go", "position": 10 } }
+  }
+               </eg></fos:result>
             </fos:test>
          </fos:example>
       </fos:examples>
