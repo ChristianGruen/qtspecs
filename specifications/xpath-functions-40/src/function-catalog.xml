@@ -1345,11 +1345,14 @@
          <fos:change issue="898 1161" PR="1265" date="2024-07-02">
             <p>The constraints on the result of the function have been relaxed.</p>
          </fos:change>
+         <fos:change issue="2314" PR="2607" date="2026-04-30">
+            <p>The return type has been changed to <code>xs:error</code>.</p>
+         </fos:change>
       </fos:changes>
    </fos:function>
    <fos:function name="error" prefix="fn">
       <fos:signatures>
-         <fos:proto name="error" return-type="item()*">
+         <fos:proto name="error" return-type="xs:error">
             <fos:arg name="code" type="xs:QName?" default="()"/>
             <fos:arg name="description" type="xs:string?" default="()"/>
             <fos:arg name="value" type="item()*" default="." usage="navigation"/>
@@ -1458,6 +1461,9 @@
          <fos:change issue="895" PR="901" date="2023-12-16">
             <p>All three arguments are now optional, and each argument can be set
             to the empty sequence. Previously if <code>$description</code> was supplied, it could not be empty.</p>
+         </fos:change>
+         <fos:change issue="2314" PR="2607" date="2026-04-30">
+            <p>The return type of the function has been changed to <code>xs:error</code>.</p>
          </fos:change>
       </fos:changes>
    </fos:function>
